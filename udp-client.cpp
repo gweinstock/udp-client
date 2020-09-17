@@ -12,6 +12,7 @@
 
 using boost::asio::ip::udp;
 
+udp::socket *sock = nullptr;
 int seq = 0;
 
 boost::array<char, 128> recv_buf;
@@ -21,19 +22,16 @@ void send_handler(const boost::system::error_code& err, std::size_t bytes_sent) 
 	std::cout << "sent " << bytes_sent << " bytes: \"";
 	std::cout.write(send_buf.data(), bytes_sent);
 	std::cout << "\"\n";
-	char ch[128];
-	sprintf_s(ch, "%c", seq);
-	send_buf[0] = ch[0];
-	seq++;
-	if (seq > 9) {
-		seq = 0;
-	}
+	char ch = (char)seq;
+	send_buf[0] = ch;
 }
 
 void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) {
 	std::cout << "received " << bytes_recv << " bytes: \"";
 	std::cout.write(recv_buf.data(), bytes_recv);
 	std::cout << "\"\n";
+	sock->async_receive(
+		boost::asio::buffer(recv_buf), &recv_handler);
 }
 
 int main(int argc, char* argv[])
@@ -52,18 +50,29 @@ int main(int argc, char* argv[])
 		udp::resolver::query query(udp::v4(), argv[1], "41234"); // port 41234
 		udp::endpoint receiver_endpoint = *resolver.resolve(query);
 
-		udp::socket socket(io_service);
-		socket.open(udp::v4());
-		socket.connect(receiver_endpoint);
+		sock = new udp::socket(io_service);
+		sock->open(udp::v4());
+		sock->connect(receiver_endpoint);
 
-		while (true) {
-			socket.async_send(boost::asio::buffer(send_buf), &send_handler);
+		// prime the pump:
+		sock->async_send(boost::asio::buffer(send_buf), &send_handler);
+		
+		seq++;
+		
+		sock->async_receive(
+			boost::asio::buffer(recv_buf), &recv_handler);
 
-			socket.async_receive(
-				boost::asio::buffer(recv_buf), &recv_handler);
+		while (seq < 10) {
+			std::cout << "seq: " << seq << std::endl;
 
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+
+			sock->async_send(boost::asio::buffer(send_buf), &send_handler);
+
+			seq++;
 		}
+
+		sock->close();
 	}
 	catch (std::exception & e)
 	{
