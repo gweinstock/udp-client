@@ -7,8 +7,34 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS 1
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include <thread>
+#include <chrono>
 
 using boost::asio::ip::udp;
+
+int seq = 0;
+
+boost::array<char, 128> recv_buf;
+boost::array<char, 128> send_buf = { '0', 0 };
+
+void send_handler(const boost::system::error_code& err, std::size_t bytes_sent) {
+	std::cout << "sent " << bytes_sent << " bytes: \"";
+	std::cout.write(send_buf.data(), bytes_sent);
+	std::cout << "\"\n";
+	char ch[128];
+	sprintf_s(ch, "%c", seq);
+	send_buf[0] = ch[0];
+	seq++;
+	if (seq > 9) {
+		seq = 0;
+	}
+}
+
+void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) {
+	std::cout << "received " << bytes_recv << " bytes: \"";
+	std::cout.write(recv_buf.data(), bytes_recv);
+	std::cout << "\"\n";
+}
 
 int main(int argc, char* argv[])
 {
@@ -30,15 +56,14 @@ int main(int argc, char* argv[])
 		socket.open(udp::v4());
 		socket.connect(receiver_endpoint);
 
-		boost::array<char, 3> send_buf = { 'h', 'i', 0 };
-		socket.send(boost::asio::buffer(send_buf));
+		while (true) {
+			socket.async_send(boost::asio::buffer(send_buf), &send_handler);
 
-		boost::array<char, 128> recv_buf;
-		udp::endpoint sender_endpoint;
-		size_t len = socket.receive_from(
-			boost::asio::buffer(recv_buf), sender_endpoint);
+			socket.async_receive(
+				boost::asio::buffer(recv_buf), &recv_handler);
 
-		std::cout.write(recv_buf.data(), len);
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
 	}
 	catch (std::exception & e)
 	{
