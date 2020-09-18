@@ -16,7 +16,7 @@ boost::asio::io_service io_service;
 udp::socket *sock = nullptr;
 int seq = 0;
 
-boost::array<char, 128> recv_buf;
+boost::array<char, 4096> recv_buf;
 
 void send_handler(const boost::system::error_code& err, std::size_t bytes_sent) {
 	//std::cout << "sent " << bytes_sent << " bytes.\"";
@@ -25,6 +25,13 @@ void send_handler(const boost::system::error_code& err, std::size_t bytes_sent) 
 void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) {
 	std::cout << "received " << bytes_recv << " bytes: ";
 	std::string s(recv_buf.begin(), recv_buf.end());
+	s = s.substr(0, bytes_recv);
+	for (int i = 0; i < bytes_recv; i++) {
+		//printf("%02hhx", recv_buf[i]);
+	}
+	s.erase(std::find(s.begin(), s.end(), '\0'), s.end());
+	//int pos = s.find_last_not_of(" \t\n\0");
+	//std::cout << "pos: " << pos << std::endl;
 	boost::trim_right(s);
 	//std::cout.write(recv_buf.data(), bytes_recv);
 	std::cout << "\"" << s << "\"\n";
@@ -35,14 +42,14 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		if (argc != 2)
+		if (argc != 3)
 		{
-			std::cerr << "Usage: client <host>" << std::endl; // host: '192.168.68.114'
+			std::cerr << "Usage: client <host> <port>" << std::endl; // host: '192.168.68.114'
 			return 1;
 		}
 
 		udp::resolver resolver(io_service);
-		udp::resolver::query query(udp::v4(), argv[1], "41234"); // port 41234
+		udp::resolver::query query(udp::v4(), argv[1], argv[2]); // port 41234
 		udp::endpoint receiver_endpoint = *resolver.resolve(query);
 
 		sock = new udp::socket(io_service);
@@ -60,7 +67,7 @@ int main(int argc, char* argv[])
 		while (seq < 10) {
 			char ch = (char)(seq+48);
 			send_buf[0] = ch;
-			printf_s("ch: '%c'\n", ch);
+			//printf_s("ch: '%c'\n", ch);
 			sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 			//std::this_thread::sleep_for(std::chrono::seconds(1));
 			seq++;
