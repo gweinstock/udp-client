@@ -8,13 +8,14 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/algorithm/string.hpp>
-#include <thread>
-#include <chrono>
+/*#include <thread>
+#include <chrono>*/
+#include <string>
 
 using boost::asio::ip::udp;
 
 udp::socket *sock = nullptr;
-int seq = 0;
+//int seq = 0;
 
 boost::array<char, 4096> recv_buf;
 
@@ -38,6 +39,7 @@ void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) 
 	sock->async_receive(boost::asio::buffer(recv_buf), &recv_handler);
 }
 
+/*
 int main(int argc, char* argv[])
 {
 	try
@@ -58,9 +60,10 @@ int main(int argc, char* argv[])
 		sock->connect(receiver_endpoint);
 
 		// prime the pump:
-		boost::array<char, 128> send_buf = { '0', 0 };
-		std::string msg = "this is a test message";
+		boost::array<char, 128> send_buf; // without this, garbage gets sent?
+		std::string msg = "connecting";
 		strcpy(send_buf.data(), msg.c_str());
+		//sprintf(send_buf.data(), "connecting", seq);
 		sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 
 		sock->async_receive(
@@ -68,8 +71,13 @@ int main(int argc, char* argv[])
 
 		while (seq < 10) {
 			char ch = (char)(seq+48);
-			send_buf[0] = ch;
+			//send_buf[0] = ch;
 			//printf_s("ch: '%c'\n", ch);
+			char buf[128];
+			sprintf(buf, "seq: %d\0", seq);
+			std::string s(buf);
+			//sprintf(send_buf.data(), "seq: %d", seq);
+			strcpy(send_buf.data(), s.c_str());
 			sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 			//std::this_thread::sleep_for(std::chrono::seconds(1));
 			seq++;
@@ -86,3 +94,4 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+*/
