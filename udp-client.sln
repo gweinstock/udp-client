@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udp-client", "udp-client.vcxproj", "{76BD5DD0-C4A2-41E7-BFC3-F2BBA2CED66C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udp-client-test", "udp-client-test\udp-client-test.vcxproj", "{5933547D-1545-4648-A45B-BD0220D37E7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{76BD5DD0-C4A2-41E7-BFC3-F2BBA2CED66C}.Release|x64.Build.0 = Release|x64
 		{76BD5DD0-C4A2-41E7-BFC3-F2BBA2CED66C}.Release|x86.ActiveCfg = Release|Win32
 		{76BD5DD0-C4A2-41E7-BFC3-F2BBA2CED66C}.Release|x86.Build.0 = Release|Win32
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Debug|x64.ActiveCfg = Debug|x64
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Debug|x64.Build.0 = Debug|x64
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Debug|x86.ActiveCfg = Debug|Win32
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Debug|x86.Build.0 = Debug|Win32
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Release|x64.ActiveCfg = Release|x64
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Release|x64.Build.0 = Release|x64
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Release|x86.ActiveCfg = Release|Win32
+		{5933547D-1545-4648-A45B-BD0220D37E7E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

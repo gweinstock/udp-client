@@ -11,10 +11,12 @@
 /*#include <thread>
 #include <chrono>*/
 #include <string>
+#include "rapidjson/document.h"
 
 using boost::asio::ip::udp;
 
 udp::socket *sock = nullptr;
+std::map<std::string, void(*)(rapidjson::Document&)> callbacks;
 //int seq = 0;
 
 boost::array<char, 4096> recv_buf;
@@ -36,6 +38,11 @@ void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) 
 	boost::trim_right(s);
 	//std::cout.write(recv_buf.data(), bytes_recv);
 	std::cout << "\"" << s << "\"\n";
+	rapidjson::Document doc;
+	doc.Parse(s.c_str());
+	rapidjson::Value& msgType = doc["msgType"];
+	std::string str = msgType.GetString();
+	callbacks[str](doc);
 	sock->async_receive(boost::asio::buffer(recv_buf), &recv_handler);
 }
 
