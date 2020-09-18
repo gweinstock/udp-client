@@ -3,8 +3,8 @@
  */
 
 #include <iostream>
-#define BOOST_USE_WINDOWS_H 1
-#define _WINSOCK_DEPRECATED_NO_WARNINGS 1
+#define BOOST_USE_WINDOWS_H
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/algorithm/string.hpp>
@@ -12,7 +12,7 @@
 #include <chrono>
 
 using boost::asio::ip::udp;
-boost::asio::io_service io_service;
+
 udp::socket *sock = nullptr;
 int seq = 0;
 
@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
+		boost::asio::io_service io_service;
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), argv[1], argv[2]); // port 41234
 		udp::endpoint receiver_endpoint = *resolver.resolve(query);
@@ -58,7 +59,8 @@ int main(int argc, char* argv[])
 
 		// prime the pump:
 		boost::array<char, 128> send_buf = { '0', 0 };
-		
+		std::string msg = "this is a test message";
+		strcpy(send_buf.data(), msg.c_str());
 		sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 
 		sock->async_receive(
