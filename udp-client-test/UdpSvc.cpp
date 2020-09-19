@@ -36,7 +36,7 @@ void UdpSvc::connect(std::string host, std::string port) {
 		sock->connect(receiver_endpoint);
 
 		boost::array<char, 4096> send_buf;
-		std::string msg = "{\"msgType\":\"connect\",\"seq\":\"0\"}";
+		std::string msg = "{\"msgType\":\"connect\",\"seq\":0}";
 		strcpy(send_buf.data(), msg.c_str());
 		sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 

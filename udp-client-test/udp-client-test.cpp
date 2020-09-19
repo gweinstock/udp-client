@@ -4,13 +4,26 @@
 #include "rapidjson/stringbuffer.h"
 
 int id = 0;
+UdpSvc udpSvc;
 
 void onConnect(rapidjson::Document& doc) {
 	id = doc["id"].GetInt();
+	std::cout << "id: " << id << std::endl;
 	rapidjson::StringBuffer buf;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buf);
 	doc.Accept(writer);
 	std::cout << buf.GetString() << std::endl;
+}
+
+void onPing(rapidjson::Document& doc) {
+	int seq = doc["seq"].GetInt();
+	std::cout << "ping: " << seq << std::endl;
+	if (seq > 5) {
+		std::cout << "send disconnect\n";
+		char buf[256];
+		sprintf(buf, "{\"msgType\":\"disconnect\",\"id\":%d}", id);
+		udpSvc.send(buf);
+	}
 }
 
 int main(int argc, char** argv) {
@@ -19,8 +32,8 @@ int main(int argc, char** argv) {
 		std::cerr << "Usage: client <host> <port>" << std::endl; // host: '192.168.68.114'
 		return 1;
 	}
-	UdpSvc udpSvc;
 	udpSvc.on("connect", &onConnect);
+	udpSvc.on("ping", &onPing);
 	udpSvc.connect(argv[1], argv[2]);
 	udpSvc.io_service.run();
 	return 0;
