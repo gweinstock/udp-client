@@ -3,7 +3,10 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
+int id = 0;
+
 void onConnect(rapidjson::Document& doc) {
+	id = doc["id"].GetInt();
 	rapidjson::StringBuffer buf;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buf);
 	doc.Accept(writer);
