@@ -158,6 +158,10 @@
   <ItemGroup>
     <ClInclude Include="UdbSvc.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="udp-client-test\UdpSvc.cpp" />
+    <ClCompile Include="udp-client.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

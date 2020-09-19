@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\gabri\source\boost_1_71_0;C:\Users\gabri\source\rapidjson-master\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\gabri\source\boost_1_71_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\gabri\source\boost_1_71_0\stage\lib;C:\Users\gabri\source\repos\udp-client\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,8 +84,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\gabri\source\boost_1_71_0\stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>boost_date_time-vc142-mt-gd-x32-1_71.lib;boost_system-vc142-mt-gd-x32-1_71.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\gabri\source\boost_1_71_0\stage\lib;C:\Users\gabri\source\repos\udp-client\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>boost_date_time-vc142-mt-gd-x32-1_71.lib;boost_system-vc142-mt-gd-x32-1_71.lib;udp-client.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,12 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\udp-client.cpp" />
     <ClCompile Include="udp-client-test.cpp" />
-    <ClCompile Include="UdpSvc.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\UdbSvc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
