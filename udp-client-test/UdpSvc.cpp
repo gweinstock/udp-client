@@ -22,7 +22,7 @@ UdpSvc::~UdpSvc()
 void UdpSvc::send(std::string msg) {
 	boost::array<char, 4096> send_buf;
 	strcpy(send_buf.data(), msg.c_str());
-	send_buf[strlen(msg.c_str())] = 0;
+	send_buf[strlen(msg.c_str())] = 0xcc;
 	sock->async_send(boost::asio::buffer(send_buf), &send_handler);
 }
 
