@@ -24,6 +24,8 @@ public:
 	boost::asio::io_service io_service;
 	void send(std::string);
 	void on(std::string, void(*)(rapidjson::Document&));
+	bool connected = false;
+	int id = -1;
 
 private:
 

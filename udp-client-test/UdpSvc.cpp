@@ -42,6 +42,15 @@ void UdpSvc::connect(std::string host, std::string port) {
 
 		sock->async_receive(
 			boost::asio::buffer(recv_buf), &recv_handler);
+
+		std::thread t([=]() {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			if (!connected) {
+				// resend connect request:
+				connect(host, port);
+			}
+		});
+		t.detach();
 	}
 	catch (std::exception & e)
 	{
