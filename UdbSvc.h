@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include "rapidjson/document.h"
+#include <thread>
 
 void send_handler(const boost::system::error_code&, std::size_t);
 void recv_handler(const boost::system::error_code&, std::size_t);

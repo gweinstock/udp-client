@@ -19,4 +19,4 @@ message(STATUS "BOOST: [${BOOST_DATE_TIME}, ${BOOST_SYSTEM}]")
 
 target_include_directories(udp-client PUBLIC ${BOOST_INCLUDE} ${RAPIDJSON_INCLUDE})
 
-target_link_libraries(udp-client PUBLIC ${BOOST_DATE_TIME} ${BOOST_SYSTEM})
+target_link_libraries(udp-client PUBLIC ${BOOST_DATE_TIME} ${BOOST_SYSTEM} pthread)

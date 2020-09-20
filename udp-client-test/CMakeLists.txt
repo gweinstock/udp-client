@@ -12,12 +12,12 @@ message(STATUS "RAPIDJSON_INCLUDE: ${RAPIDJSON_INCLUDE}")
 # set the project name
 project(udp-client-test)
 
-find_library(BOOST_DATE_TIME NAME boost_date_time-vc142-mt-gd-x32-1_71 PATHS ${BOOST_LIB})
-find_library(BOOST_SYSTEM NAME boost_system-vc142-mt-gd-x32-1_71 PATHS ${BOOST_LIB})
-find_library(UDP_CLIENT udp-client PATHS ../cmake-build/Debug)
+find_library(BOOST_DATE_TIME NAME boost_date_time PATHS ${BOOST_LIB})
+find_library(BOOST_SYSTEM NAME boost_system PATHS ${BOOST_LIB})
+find_library(UDP_CLIENT udp-client PATHS ../cmake-build)
 
-message(STATUS "BOOST: [${BOOST_DATE_TIME}, ${BOOST_SYSTEM}]")
+message(STATUS "BOOST: [${BOOST_DATE_TIME}, ${BOOST_SYSTEM} ${UDP_CLIENT}]")
 
 target_include_directories(udp-client-test PUBLIC ${BOOST_INCLUDE} ${RAPIDJSON_INCLUDE} ..)
 
-target_link_libraries(udp-client-test PUBLIC ${BOOST_DATE_TIME} ${BOOST_SYSTEM} ${UDP_CLIENT})
+target_link_libraries(udp-client-test PUBLIC ${BOOST_DATE_TIME} ${BOOST_SYSTEM} ${UDP_CLIENT} pthread)
