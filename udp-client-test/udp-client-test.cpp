@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
 		std::cerr << "Usage: client <host> <port>" << std::endl; // host: '192.168.68.114'
 		return 1;
 	}
+	udpSvc.on("connect", &onConnect);
 	udpSvc.on("ping", &onPing);
 	udpSvc.connect(argv[1], argv[2]);
 	udpSvc.io_service.run();

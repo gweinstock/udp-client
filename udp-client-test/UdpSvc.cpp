@@ -44,8 +44,9 @@ void UdpSvc::connect(std::string host, std::string port) {
 			boost::asio::buffer(recv_buf), &recv_handler);
 
 		std::thread t([=]() {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-			if (!connected && attempts < 3) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			if (!connected && attempts <= 3) {
+				std::cout << "reconnecting...\n";
 				attempts++;
 				// resend connect request:
 				connect(host, port);
