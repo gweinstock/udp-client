@@ -28,5 +28,6 @@ public:
 	int id = -1;
 
 private:
+	int attempts = 0; // connect attempts
 
 };

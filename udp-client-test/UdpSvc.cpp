@@ -45,7 +45,8 @@ void UdpSvc::connect(std::string host, std::string port) {
 
 		std::thread t([=]() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-			if (!connected) {
+			if (!connected && attempts < 3) {
+				attempts++;
 				// resend connect request:
 				connect(host, port);
 			}
