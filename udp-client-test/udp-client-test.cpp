@@ -18,12 +18,16 @@ void onConnect(rapidjson::Document& doc) {
 void onPing(rapidjson::Document& doc) {
 	int seq = doc["seq"].GetInt();
 	std::cout << "ping: " << seq << std::endl;
-	if (seq > 10 && udpSvc.connected) {
+	if (seq > 5 && udpSvc.connected) {
 		std::cout << "send disconnect\n";
 		char buf[256];
 		sprintf(buf, "{\"msgType\":\"disconnect\",\"id\":%d}", udpSvc.id);
 		rapidjson::Document doc;
-		doc["msgType"] = "disconnect";
+		doc.SetObject();
+		rapidjson::Value msgType("disconnect");
+		std::cout << "set msgType\n";
+		doc.AddMember("msgType", msgType, doc.GetAllocator());
+		std::cout << "udpSvc.send\n";
 		udpSvc.send(doc);
 		udpSvc.connected = false;
 	}
