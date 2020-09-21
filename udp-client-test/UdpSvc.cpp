@@ -19,10 +19,17 @@ UdpSvc::~UdpSvc()
 	}
 }
 
-void UdpSvc::send(std::string msg) {
-	boost::array<char, 4096> send_buf;
-	strcpy(send_buf.data(), msg.c_str());
-	sock->async_send(boost::asio::buffer(send_buf), &send_handler);
+void UdpSvc::send(rapidjson::Document& doc) {
+	if (connected) {
+		doc["id"] = id;
+		rapidjson::StringBuffer buf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buf);
+		doc.Accept(writer);
+		std::cout << buf.GetString() << std::endl;
+		boost::array<char, 4096> send_buf;
+		strcpy(send_buf.data(), buf.GetString());
+		sock->async_send(boost::asio::buffer(send_buf), &send_handler);
+	}
 }
 
 void UdpSvc::connect(std::string host, std::string port) {

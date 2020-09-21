@@ -22,7 +22,9 @@ void onPing(rapidjson::Document& doc) {
 		std::cout << "send disconnect\n";
 		char buf[256];
 		sprintf(buf, "{\"msgType\":\"disconnect\",\"id\":%d}", udpSvc.id);
-		udpSvc.send(buf);
+		rapidjson::Document doc;
+		doc["msgType"] = "disconnect";
+		udpSvc.send(doc);
 		udpSvc.connected = false;
 	}
 }

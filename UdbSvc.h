@@ -9,6 +9,8 @@
 #include <string>
 #include <map>
 #include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 #include <thread>
 
 void send_handler(const boost::system::error_code&, std::size_t);
@@ -23,7 +25,7 @@ public:
 	~UdpSvc();
 	void connect(std::string, std::string);
 	boost::asio::io_service io_service;
-	void send(std::string);
+	void send(rapidjson::Document&);
 	void on(std::string, void(*)(rapidjson::Document&));
 	bool connected = false;
 	int id = -1;
