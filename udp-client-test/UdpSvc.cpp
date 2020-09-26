@@ -22,8 +22,8 @@ UdpSvc::~UdpSvc()
 void UdpSvc::send(rapidjson::Document& doc) {
 	if (connected) {
 		std::cout << "set id " << id << std::endl;
-		rapidjson::Value id(id);
-		doc.AddMember("id", id, doc.GetAllocator());
+		rapidjson::Value jsonid(id);
+		doc.AddMember("id", jsonid, doc.GetAllocator());
 		std::cout << "done. to string\n";
 		rapidjson::StringBuffer buf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buf);
