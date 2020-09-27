@@ -28,22 +28,27 @@ void send_handler(const boost::system::error_code& err, std::size_t bytes_sent) 
 void recv_handler(const boost::system::error_code& err, std::size_t bytes_recv) {
 	std::cout << "received " << bytes_recv << " bytes: ";
 	std::string s(recv_buf.begin(), recv_buf.end());
-	s = s.substr(0, bytes_recv);
-	for (int i = 0; i < bytes_recv; i++) {
-		//printf("%02hhx", recv_buf[i]);
+	if (bytes_recv == 0 || s == "") {
+		std::cout << "empty msg\n";
+		sock->async_receive(boost::asio::buffer(recv_buf), &recv_handler);
+	} else {
+		s = s.substr(0, bytes_recv);
+		for (int i = 0; i < bytes_recv; i++) {
+			//printf("%02hhx", recv_buf[i]);
+		}
+		s.erase(std::find(s.begin(), s.end(), '\0'), s.end());
+		//int pos = s.find_last_not_of(" \t\n\0");
+		//std::cout << "pos: " << pos << std::endl;
+		boost::trim_right(s);
+		//std::cout.write(recv_buf.data(), bytes_recv);
+		std::cout << "\"" << s << "\"\n";
+		rapidjson::Document doc;
+		doc.Parse(s.c_str());
+		rapidjson::Value& msgType = doc["msgType"];
+		std::string str = msgType.GetString();
+		callbacks[str](doc);
+		sock->async_receive(boost::asio::buffer(recv_buf), &recv_handler);
 	}
-	s.erase(std::find(s.begin(), s.end(), '\0'), s.end());
-	//int pos = s.find_last_not_of(" \t\n\0");
-	//std::cout << "pos: " << pos << std::endl;
-	boost::trim_right(s);
-	//std::cout.write(recv_buf.data(), bytes_recv);
-	std::cout << "\"" << s << "\"\n";
-	rapidjson::Document doc;
-	doc.Parse(s.c_str());
-	rapidjson::Value& msgType = doc["msgType"];
-	std::string str = msgType.GetString();
-	callbacks[str](doc);
-	sock->async_receive(boost::asio::buffer(recv_buf), &recv_handler);
 }
 
 /*
